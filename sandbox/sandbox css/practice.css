@@ -86,14 +86,17 @@ max-width: 65ch; /*About 65 characters wide - good for reading on any screen */
 margin: 0 auto; /* Centers the content */
 padding: 5%; /* 5% padding scales with screen size */
 
+}
 
-
-
-
+section{
+    margin-bottom: 2rem;
 }
 
 
-
+/* Consistent spacing between paragraphs */
+p + p {
+    margin-top: 1rem;
+}
 
 
 h1 {
