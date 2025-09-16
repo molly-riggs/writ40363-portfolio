@@ -78,8 +78,25 @@ border-radius: 10px;
 display: flex;
 align-items: center;
 color: #6c757d;
+overflow: hidden; /* ADDED: Ensures image doesn't overflow rounded corners */
 
 }
+
+/* ADDED: Professional headshot styling with size constraints */
+.header_pic img {
+width: 100%;
+height: 100%;
+max-width: 400px; /* ADDED: Prevents image from exceeding reasonable size */
+max-height: 400px; /* ADDED: Maintains square-ish proportions */
+object-fit: cover; /* Maintains aspect ratio while filling container */
+border-radius: 10px; /* Matches container border radius */
+
+}
+
+
+
+
+
 
 main {
 max-width: 65ch; /*About 65 characters wide - good for reading on any screen */
@@ -87,6 +104,38 @@ margin: 0 auto; /* Centers the content */
 padding: 5%; /* 5% padding scales with screen size */
 
 }
+.about-section {
+display: flex;
+flex-wrap: wrap;
+gap: 2rem;
+padding: 3rem 0;
+align-items: center;
+}
+
+.about-image {
+flex: 1;
+min-width: 250px;
+text-align: center;
+}
+
+.about-image img {
+width: 100%;
+max-width: 250px;
+height: auto;
+border-radius: 8px;
+}
+
+.about-text {
+flex: 2;
+min-width: 250px;}
+
+
+
+
+
+
+
+
 
 section{
     margin-bottom: 2rem;
@@ -108,4 +157,22 @@ h1 {
 h2 {
     color: #4d1979;
     background-color: aquamarine;
+}
+
+
+/* ADDED: h3 styling as refrenced in lab prompt */
+h3 {
+font-size: 1.5rem;
+font-weight: 600;
+color: #4a5568;
+margin-bottom: 0.6rem;
+line-height: 1.4;
+
+}
+
+/* ADDED: Additional paragraph styling for better spacing */
+p {
+font-size: 1rem;
+margin-bottom: 1rem;
+color: #555; /* Slightly lighter for body text */
 }
