@@ -149,14 +149,19 @@ p + p {
 
 
 h1 {
-    color: #4d1979;
-    background-color: azure;
+  font-size: 2.5rem; /* Large, clear headline */
+  font-weight: 700;  /* Bold for impact */
+  color: #2d3748;    /* Darker gray for headings */
+  margin-bottom: 1rem;
+  line-height: 1.2;  /* Tighter spacing for headings */
 }
 
-
 h2 {
-    color: #4d1979;
-    background-color: aquamarine;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
 }
 
 
