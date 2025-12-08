@@ -28,9 +28,42 @@ h1, h2 {
 label {
     display: flex;
     flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 0.9rem;
 }
 
+
+/* Add this new rule to style the inputs and select */
+input[type="date"],
+input[type="number"],
+select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    width: 150px;  /* Fixed width makes them more square */
+    height: 40px;  /* Fixed height */
+    box-sizing: border-box;  /* Includes padding in width/height calculation */
+}
+
+/* Optional: Different styling on focus (when you click in them) */
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #ff1493;  /* Matches your hot pink button */
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: #ff1493;
+    color: white;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+/* ...existing code... */
 button {
     padding: 0.5rem 1rem;
     border: none;
@@ -60,6 +93,7 @@ button:hover {
 
 .workout-meta {
     font-size: 0.9rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #555;
 }
 
