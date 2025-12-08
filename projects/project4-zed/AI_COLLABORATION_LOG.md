@@ -197,3 +197,54 @@ Summary:
 💡 Move font to body for cleaner code
 💡 Remove redundant font-family declarations from individual elements
 The code will work as-is, but the cleanup will make it more maintainable!
+
+Debugging:
+My code is not working correctly, there are duplicates of the summary and workout tracker. my delete button also isnt working. help me debug my code and tell me what how to fix what is wrong
+Perfect! Now I can see exactly what's wrong. Let me teach you how to debug this yourself.
+
+Problem 1: Duplicate Sections
+Look at your HTML - you have sections appearing TWICE:
+
+Summary appears at:
+
+Lines 48-52 (first one)
+Lines 56-60 (second one - this is the duplicate!)
+Workout List appears at:
+
+Lines 88-92 (first one)
+Lines 96-100 (second one - this is the duplicate!)
+How to spot duplicates:
+Look for <section class="summary"> - count how many times it appears
+Look for <section class="workout-list"> - count how many times it appears
+If you see more than ONE of each, you have duplicates!
+How to fix it:
+Delete lines 56-60 and lines 96-100. You want to keep ONLY the first occurrence of each section.
+
+Problem 2: Delete Button Not Working
+This is actually caused by the duplicates! Here's why:
+
+In your JavaScript, you have this code that handles deletes:
+
+But your JavaScript is looking for id="workout-list" to attach the event listener. Because you have TWO elements with id="workout-list", JavaScript gets confused:
+
+It attaches the delete listener to the FIRST <ul id="workout-list">
+But your workouts might be rendering in the SECOND <ul id="workout-list">
+So clicking delete on the second list doesn't trigger the event listener!
+The fix:
+Once you delete the duplicate sections, you'll only have ONE <ul id="workout-list">, and the delete button will start working again!
+
+Your Action Plan:
+Step 1: Delete lines 56-60 (the duplicate Summary section)
+
+Step 2: Delete lines 96-100 (the duplicate Workout List section)
+
+Step 3: Also delete the comment lines that say <!-- ...existing code... --> (lines 54 and 94) - these were just placeholders from my example
+
+Step 4: Save and refresh your browser
+
+What Your Final HTML Should Look Like:
+Why This Will Fix Both Problems:
+Duplicates gone = Each section appears only once on the page
+Delete button works = JavaScript can find the ONE workout-list element and attach the event listener correctly
+IDs are unique = Each id attribute appears only once (as it should!)
+Try making these deletions yourself and let me know if it works!

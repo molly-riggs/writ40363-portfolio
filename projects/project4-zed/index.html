@@ -50,13 +50,36 @@
             <p>Total minutes: <span id="total-minutes">0</span></p>
         </section>
 
+   
+
+        <!-- Weekly Goal Section - NEW -->
+        <section class="goal-section">
+            <h2>Weekly Goal</h2>
+            
+            <!-- Goal Setting Form -->
+            <div class="goal-form">
+                <label>
+                    Set weekly minutes goal:
+                    <input type="number" id="goal-input" min="1" placeholder="e.g., 150">
+                </label>
+                <button id="set-goal-btn" type="button">Set Goal</button>
+            </div>
+
+            <!-- Goal Progress Display -->
+            <div class="goal-progress">
+                <p>This week: <span id="week-minutes">0</span> / <span id="goal-target">0</span> minutes</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-text" id="progress-text">No goal set yet</p>
+            </div>
+        </section>
+
         <!-- Workout List -->
         <section class="workout-list">
             <h2>Workout History</h2>
             <ul id="workout-list"></ul>
         </section>
     </main>
-
     <script src="js/app.js"></script>
 </body>
-</html>

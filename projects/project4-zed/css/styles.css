@@ -104,3 +104,63 @@ button:hover {
 .workout-actions button:hover {
     background: #b91c1c;
 }
+/* ...existing code... */
+
+/* Goal Section Styles */
+.goal-section {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #fff5f7;
+    border: 2px solid #ff1493;
+}
+
+.goal-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.goal-form label {
+    flex: 1;
+}
+
+.goal-form input {
+    width: 100%;
+}
+
+#set-goal-btn {
+    background: #ff1493;
+    padding: 0.5rem 1rem;
+}
+
+#set-goal-btn:hover {
+    background: #c71585;
+}
+
+.goal-progress {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background: #e5e5e5;
+    border-radius: 0;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #ff1493;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    font-weight: bold;
+    color: #ff1493;
+}
+
+/* ...existing code... */
