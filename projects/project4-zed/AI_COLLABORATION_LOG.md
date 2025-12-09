@@ -248,3 +248,325 @@ Duplicates gone = Each section appears only once on the page
 Delete button works = JavaScript can find the ONE workout-list element and attach the event listener correctly
 IDs are unique = Each id attribute appears only once (as it should!)
 Try making these deletions yourself and let me know if it works!
+
+I fixed this but now my entries don't save, the delete button won't work and progress is not being tracked
+Good job removing the duplicates! Now your HTML structure is clean. The issue is that your JavaScript doesn't have the goal tracking code yet. Let me teach you what's missing and how to add it.
+
+What's Happening:
+Your HTML has all the goal elements (id="week-minutes", id="goal-target", etc.), but your JavaScript doesn't know what to do with them yet. Let me show you what needs to be added to your js/app.js.
+
+What You Need to Learn:
+Concept 1: Getting References to New Elements
+At the top of your JavaScript, you need to "grab" the new goal elements so you can update them:
+// Your existing references
+const goalInput = document.getElementById('goal-input');
+const setGoalBtn = document.getElementById('set-goal-btn');
+const weekMinutesEl = document.getElementById('week-minutes');
+const goalTargetEl = document.getElementById('goal-target');
+const progressFillEl = document.getElementById('progress-fill');
+const progressTextEl = document.getElementById('progress-text');
+What this does: Creates variables that point to your HTML elements so you can change their content later.
+
+Concept 2: Storing the Goal
+You need a variable to hold the goal value:
+let weeklyGoal = 0;
+Concept 3: Loading the Saved Goal
+In your init() function, after loading workouts, add code to load the saved goal:
+function init() {
+    const stored = localStorage.getItem('workouts');
+    if (stored) {
+        try {
+            workouts = JSON.parse(stored);
+        } catch {
+            workouts = [];
+        }
+    }
+    
+    // ADD THIS - Load saved goal
+    const savedGoal = localStorage.getItem('weeklyGoal');
+    if (savedGoal) {
+        weeklyGoal = Number(savedGoal);
+    }
+    
+    render();
+}
+What this does: Checks localStorage for a saved goal and loads it when the page loads.
+
+Concept 4: Calculating This Week's Minutes
+In your render() function, you need to:
+
+Calculate which workouts are from the last 7 days
+Add up their minutes
+Update the goal progress display
+Here's how to modify your render() function. I'll show you the changes:
+function render() {
+    listEl.innerHTML = '';
+
+    let totalMinutes = 0;
+    let weekMinutes = 0;  // NEW - track this week's minutes
+    
+    // NEW - Calculate dates for "this week" (last 7 days)
+    const today = new Date();
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    workouts.forEach((workout) => {
+        totalMinutes += workout.duration;
+        
+        // NEW - Check if workout is from this week
+        const workoutDate = new Date(workout.date);
+        if (workoutDate >= weekAgo) {
+            weekMinutes += workout.duration;
+        }
+
+        // Your existing code to create workout items...
+        const li = document.createElement('li');
+        li.className = 'workout-item';
+        li.dataset.id = workout.id;
+
+        li.innerHTML = `
+            <div>
+                <strong>${workout.type}</strong>
+                <div class="workout-meta">
+                    ${workout.date} • ${workout.duration} min
+                </div>
+            </div>
+            <div class="workout-actions">
+                <button type="button" data-action="delete">Delete</button>
+            </div>
+        `;
+
+        listEl.appendChild(li);
+    });
+
+    // Update summary
+    totalWorkoutsEl.textContent = workouts.length;
+    totalMinutesEl.textContent = totalMinutes;
+    
+    // NEW - Update goal progress
+    updateGoalProgress(weekMinutes);
+}
+What this does:
+
+weekMinutes counts minutes only from workouts in the last 7 days
+new Date() creates a date object you can compare
+if (workoutDate >= weekAgo) checks if the workout is recent
+Concept 5: Updating the Progress Display
+Add this new function after your render() function:
+function updateGoalProgress(weekMinutes) {
+    // Update the numbers displayed
+    weekMinutesEl.textContent = weekMinutes;
+    goalTargetEl.textContent = weeklyGoal;
+    
+    // If no goal is set, show default message
+    if (weeklyGoal === 0) {
+        progressFillEl.style.width = '0%';
+        progressTextEl.textContent = 'No goal set yet';
+        progressTextEl.style.color = '#666';
+        return;
+    }
+    
+    // Calculate percentage (cap at 100%)
+    const percentage = Math.min((weekMinutes / weeklyGoal) * 100, 100);
+    progressFillEl.style.width = percentage + '%';
+    
+    // Show different message based on progress
+    if (weekMinutes >= weeklyGoal) {
+        progressTextEl.textContent = '🎉 Goal achieved!';
+        progressTextEl.style.color = '#22c55e';
+    } else {
+        const remaining = weeklyGoal - weekMinutes;
+        progressTextEl.textContent = `${remaining} minutes to go!`;
+        progressTextEl.style.color = '#ff1493';
+    }
+}
+What this does:
+
+Updates the text showing "X / Y minutes"
+Calculates what percentage of your goal you've completed
+Changes the width of the progress bar
+Shows encouraging messages
+Concept 6: Setting a New Goal
+Add this event listener at the bottom of your file:
+setGoalBtn.addEventListener('click', () => {
+    const goal = Number(goalInput.value);
+    
+    if (goal > 0) {
+        weeklyGoal = goal;
+        localStorage.setItem('weeklyGoal', weeklyGoal);
+        goalInput.value = '';
+        render();
+    }
+});
+What this does:
+
+Listens for clicks on the "Set Goal" button
+Gets the number from the input field
+Saves it to localStorage
+Clears the input field
+Re-renders to update the progress display
+Your Complete Updated js/app.js:
+Here's your full file with all the additions:
+const form = document.getElementById('workout-form');
+const dateInput = document.getElementById('workout-date');
+const typeInput = document.getElementById('workout-type');
+const durationInput = document.getElementById('workout-duration');
+const listEl = document.getElementById('workout-list');
+const totalWorkoutsEl = document.getElementById('total-workouts');
+const totalMinutesEl = document.getElementById('total-minutes');
+
+// NEW - Goal tracking elements
+const goalInput = document.getElementById('goal-input');
+const setGoalBtn = document.getElementById('set-goal-btn');
+const weekMinutesEl = document.getElementById('week-minutes');
+const goalTargetEl = document.getElementById('goal-target');
+const progressFillEl = document.getElementById('progress-fill');
+const progressTextEl = document.getElementById('progress-text');
+
+let workouts = [];
+let weeklyGoal = 0;  // NEW
+
+init();
+
+function init() {
+    const stored = localStorage.getItem('workouts');
+    if (stored) {
+        try {
+            workouts = JSON.parse(stored);
+        } catch {
+            workouts = [];
+        }
+    }
+    
+    // NEW - Load saved goal
+    const savedGoal = localStorage.getItem('weeklyGoal');
+    if (savedGoal) {
+        weeklyGoal = Number(savedGoal);
+    }
+    
+    render();
+}
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const workout = {
+        id: Date.now().toString(),
+        date: dateInput.value || new Date().toISOString().slice(0, 10),
+        type: typeInput.value,
+        duration: Number(durationInput.value)
+    };
+
+    workouts.push(workout);
+    save();
+    render();
+    form.reset();
+});
+
+function save() {
+    localStorage.setItem('workouts', JSON.stringify(workouts));
+}
+
+function render() {
+    listEl.innerHTML = '';
+
+    let totalMinutes = 0;
+    let weekMinutes = 0;  // NEW
+    
+    // NEW - Calculate dates for this week
+    const today = new Date();
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    workouts.forEach((workout) => {
+        totalMinutes += workout.duration;
+        
+        // NEW - Count this week's minutes
+        const workoutDate = new Date(workout.date);
+        if (workoutDate >= weekAgo) {
+            weekMinutes += workout.duration;
+        }
+
+        const li = document.createElement('li');
+        li.className = 'workout-item';
+        li.dataset.id = workout.id;
+
+        li.innerHTML = `
+            <div>
+                <strong>${workout.type}</strong>
+                <div class="workout-meta">
+                    ${workout.date} • ${workout.duration} min
+                </div>
+            </div>
+            <div class="workout-actions">
+                <button type="button" data-action="delete">Delete</button>
+            </div>
+        `;
+
+        listEl.appendChild(li);
+    });
+
+    totalWorkoutsEl.textContent = workouts.length;
+    totalMinutesEl.textContent = totalMinutes;
+    
+    // NEW - Update goal progress
+    updateGoalProgress(weekMinutes);
+}
+
+// NEW - Function to update goal progress display
+function updateGoalProgress(weekMinutes) {
+    weekMinutesEl.textContent = weekMinutes;
+    goalTargetEl.textContent = weeklyGoal;
+    
+    if (weeklyGoal === 0) {
+        progressFillEl.style.width = '0%';
+        progressTextEl.textContent = 'No goal set yet';
+        progressTextEl.style.color = '#666';
+        return;
+    }
+    
+    const percentage = Math.min((weekMinutes / weeklyGoal) * 100, 100);
+    progressFillEl.style.width = percentage + '%';
+    
+    if (weekMinutes >= weeklyGoal) {
+        progressTextEl.textContent = '🎉 Goal achieved!';
+        progressTextEl.style.color = '#22c55e';
+    } else {
+        const remaining = weeklyGoal - weekMinutes;
+        progressTextEl.textContent = `${remaining} minutes to go!`;
+        progressTextEl.style.color = '#ff1493';
+    }
+}
+
+// Handle delete
+listEl.addEventListener('click', (event) => {
+    const button = event.target;
+    if (button.dataset.action === 'delete') {
+        const li = button.closest('.workout-item');
+        const id = li.dataset.id;
+        workouts = workouts.filter((w) => w.id !== id);
+        save();
+        render();
+    }
+});
+
+// NEW - Set Goal button handler
+setGoalBtn.addEventListener('click', () => {
+    const goal = Number(goalInput.value);
+    
+    if (goal > 0) {
+        weeklyGoal = goal;
+        localStorage.setItem('weeklyGoal', weeklyGoal);
+        goalInput.value = '';
+        render();
+    }
+});
+Now Test It:
+Save your js/app.js file
+Refresh your browser
+Try:
+Adding a workout (should save and appear in list)
+Clicking delete (should remove the workout)
+Setting a goal (type 150, click "Set Goal")
+Add workouts and watch the progress bar fill!
+Let me know if it works or if you get any errors!
